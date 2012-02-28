@@ -4,10 +4,11 @@ require 'switcher/facade'
 module Switcher
   class Spec
     def initialize(name, options={})
-      @name        = name.to_sym
-      @states      = {}
-      @states_list = []
-      @state_prev  = nil
+      @name          = name.to_sym
+      @states        = {}
+      @states_list   = []
+      @state_prev    = nil
+      @state_current = nil
     end
 
     attr_reader :name, :states, :state_prev
@@ -20,8 +21,8 @@ module Switcher
       @states[name.to_sym] = listener
     end
 
-    def current_state
-      @current_state || @states_list.first
+    def state_current
+      @state_current || @states_list.first
     end
 
     def publish(current_state, event, instance, args)
@@ -38,8 +39,8 @@ module Switcher
 
     def set_state(facade)
       unless facade.stopped || facade.target_state.nil?
-        @state_prev    = current_state
-        @current_state = facade.target_state.to_sym
+        @state_prev    = state_current
+        @state_current = facade.target_state.to_sym
       end
     end
   end

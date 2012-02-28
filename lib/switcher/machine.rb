@@ -18,7 +18,7 @@ module Switcher
           define_method(:"#{spec_name}_spec") { spec }
           define_method(:"#{spec_name}_prev") { spec.state_prev }
 
-          define_method(:"#{spec_name}") { spec.current_state }
+          define_method(:"#{spec_name}") { spec.state_current }
 
           events = []
 
