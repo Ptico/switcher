@@ -25,6 +25,7 @@ module Switcher
     end
 
     def publish(current_state, event, instance, args)
+      return unless @states.has_key?(current_state.to_sym)
       facade = Facade.new(args)
       ["before_#{event}", event.to_s].each do |ev|
         @states[current_state.to_sym].trigger(ev, facade, instance, args)
@@ -36,8 +37,8 @@ module Switcher
   private
 
     def set_state(facade)
-      unless facade.stopped && facade.target_state.nil?
-        @state_prev    = @current_state
+      unless facade.stopped || facade.target_state.nil?
+        @state_prev    = current_state
         @current_state = facade.target_state.to_sym
       end
     end
