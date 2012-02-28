@@ -7,15 +7,15 @@ Gem::Specification.new do |s|
   s.version     = Switcher::VERSION
   s.authors     = ["Andrey Savchenko"]
   s.email       = ["andrey@aejis.eu"]
-  s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.homepage    = "https://github.com/Ptico/switcher"
+  s.summary     = %q{Switcher is simple, event-driven state machine}
+  s.description = %q{Switcher is simple, event-driven state machine}
 
   s.rubyforge_project = "switcher"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  #s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
   # specify any dependencies here; for example:
