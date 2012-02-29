@@ -1,5 +1,5 @@
 class Car
-  include Switcher::Machine
+  include Switcher
 
   switcher :state do
     state :new do
