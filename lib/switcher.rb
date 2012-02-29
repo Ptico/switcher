@@ -1,5 +1,6 @@
 require "switcher/version"
 require 'switcher/spec'
+require 'switcher/statement'
 
 module Switcher
   module ClassMethods
@@ -11,13 +12,13 @@ module Switcher
 
       spec_name = spec.name
 
-      self.class_variable_get(:@@__specs__) << spec # dup and destroy?
+      self.class_variable_get(:@@__specs__) << spec
 
       self.class_eval do
         define_method(:"#{spec_name}_spec") { spec }
-        define_method(:"#{spec_name}_prev") { spec.state_prev }
+        define_method(:"#{spec_name}_prev") { self.instance_variable_get(:"@#{spec_name}_statement").state_prev }
 
-        define_method(:"#{spec_name}") { spec.state_current }
+        define_method(:"#{spec_name}") { self.instance_variable_get(:"@#{spec_name}_statement").state_current }
 
         events = []
 
@@ -38,15 +39,24 @@ module Switcher
 
           define_method(:"#{event_name}!") do |*args|
             self.class.class_variable_get(:@@__specs__).each do |spc|
-              spc.publish(self.send(:"#{spc.name}"), event_name, self, args)
+              self.instance_variable_get(:"@#{spc.name}_statement").publish(event_name, args)
             end
           end
         end
       end
     end
+
   end
 
   def self.included(base)
     base.extend ClassMethods
+  end
+
+  def initialize(*args)
+    self.class.class_variable_get(:@@__specs__).each do |spc|
+      self.instance_variable_set(:"@#{spc.name}_statement", Statement.new(self, spc))
+    end
+
+    super(*args) if defined?(super)
   end
 end

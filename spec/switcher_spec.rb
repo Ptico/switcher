@@ -6,57 +6,57 @@ require 'fixtures/car'
 describe Switcher do
 
   describe "Basic functionality" do
-    people = Human.new
+    person = Human.new
 
     it "should have initial state" do
-      people.state.should eq(:newborn)
+      person.state.should eq(:newborn)
     end
 
     it "should switch to state with option" do
-      people.go_to_school!
+      person.go_to_school!
 
-      people.state.should eq(:scholar)
+      person.state.should eq(:scholar)
     end
 
     it "should switch to state by internal condition" do
-      people.finish_school!(2)
+      person.finish_school!(2)
 
-      people.state.should eq(:worker)
+      person.state.should eq(:worker)
     end
 
     it "should have before and after callbacks" do
-      people.full_age!(100)
-      people.fight!(true)
+      person.full_age!(100)
+      person.fight!(true)
 
-      people.state.should eq(:civil)
-      people.easy_to_fight.should be_true
-      people.honor.should eq(100)
+      person.state.should eq(:civil)
+      person.easy_to_fight.should be_true
+      person.honor.should eq(100)
     end
 
     it "can prevent switch" do
-      people.find_job!(false)
+      person.find_job!(false)
 
-      people.state.should eq(:civil)
+      person.state.should eq(:civil)
     end
 
     it "and can not" do
-      people.find_job!(true)
+      person.find_job!(true)
 
-      people.state.should eq(:manager)
+      person.state.should eq(:manager)
     end
 
     it "can detect possibility to switch" do
-      people.can_fight?.should be_false
-      people.can_die?.should   be_true
+      person.can_fight?.should be_false
+      person.can_die?.should   be_true
     end
 
     it "should remember previous state" do
-      people.state_prev.should eq(:civil)
+      person.state_prev.should eq(:civil)
     end
 
     it "should have state predicate" do
-      people.state_manager?.should be_true
-      people.state_civil?.should   be_false
+      person.state_manager?.should be_true
+      person.state_civil?.should   be_false
     end
   end
 
@@ -93,6 +93,17 @@ describe Switcher do
 
       car.movement_moves?.should  be_true
       car.movement_stands?.should be_false
+    end
+  end
+
+  describe "Multiple instances" do
+    car_one = Car.new
+    car_two = Car.new
+
+    it "should work independent" do
+      car_one.buy!
+
+      car_two.state.should eq(:new)
     end
   end
 end
