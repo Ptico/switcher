@@ -46,17 +46,17 @@ module Switcher
       end
     end
 
+    def new(*args, &block)
+      instance = allocate
+      instance.instance_eval { initialize(*args, &block) }
+      instance.class.class_variable_get(:@@__specs__).each do |spc|
+        instance.instance_variable_set(:"@#{spc.name}_statement", Statement.new(instance, spc))
+      end
+      instance
+    end
   end
 
   def self.included(base)
     base.extend ClassMethods
-  end
-
-  def initialize(*args)
-    self.class.class_variable_get(:@@__specs__).each do |spc|
-      self.instance_variable_set(:"@#{spc.name}_statement", Statement.new(self, spc))
-    end
-
-    super(*args) if defined?(super)
   end
 end

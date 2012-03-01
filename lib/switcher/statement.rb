@@ -17,18 +17,19 @@ module Switcher
 
     def publish(event, args)
       states = @spec.states
+      state  = state_current
 
-      return unless states.has_key?(state_current)
+      return unless states.has_key?(state)
 
       facade = Facade.new(args)
 
       ["before_#{event}", event.to_s].each do |ev|
-        states[state_current].trigger(ev, facade, @instance, args)
+        states[state].trigger(ev, facade, @instance, args)
       end
 
       set_state(facade)
 
-      states[state_current].trigger("after_#{event}", facade, @instance, args)
+      states[state].trigger("after_#{event}", facade, @instance, args)
     end
 
   private
