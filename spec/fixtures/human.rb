@@ -1,5 +1,5 @@
 class Human
-  include Switcher
+  include Switcher::Object
 
   def initialize
     @easy_to_fight = false
