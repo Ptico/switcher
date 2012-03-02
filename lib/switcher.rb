@@ -2,6 +2,7 @@ require "switcher/version"
 require 'switcher/spec'
 require 'switcher/statement'
 require 'switcher/adapters/object'
+require 'switcher/adapters/active_record'
 
 module Switcher
   module ClassMethods
@@ -15,9 +16,5 @@ module Switcher
 
       switcher_pre_initialize(self, spec)
     end
-  end
-
-  def self.included(base)
-    base.extend ClassMethods
   end
 end

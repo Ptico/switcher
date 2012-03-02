@@ -25,7 +25,7 @@ module Switcher
 
           spec.states.each_pair do |state_name, state|
             define_method(:"#{spec_name}_#{state_name}?") do
-              state_name == self.send(:"#{spec.name}")
+              state_name == self.send(:"#{spec_name}")
             end
 
             events << state.event_names

@@ -1,18 +1,22 @@
 module Switcher
   class Statement
-    def initialize(instance, spec)
+    def initialize(instance, spec, state_current=nil, state_prev=nil)
       @instance = instance
 
       @spec = spec
 
-      @state_prev    = nil
-      @state_current = nil
+      @state_prev    = state_prev
+      @state_current = state_current
     end
 
     attr_reader :name, :states, :state_prev
 
     def state_current
-      @state_current || @spec.states_list.first
+      (@state_current || @spec.states_list.first).to_sym
+    end
+
+    def state_prev
+      @state_prev ? @state_prev.to_sym : nil
     end
 
     def publish(event, args)
