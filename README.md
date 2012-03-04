@@ -10,3 +10,9 @@ Docs: See specs
 * Event bubbling
 * Events without state
 * Ability to define validations, associations etc. in state (ability to call static methods from object)
+
+## Adapters TODO:
+
+* ActiveModel
+* Virtus
+* Mongoid

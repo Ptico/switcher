@@ -58,6 +58,7 @@ describe Switcher::ActiveRecord do
   it "should save last defined state" do
     box.produce!
     box.break!
+    box.save
 
     box.reload
 

@@ -2,6 +2,7 @@ require 'spec_helper'
 
 require 'fixtures/human'
 require 'fixtures/car'
+require 'fixtures/airbag'
 
 describe Switcher do
 
@@ -40,7 +41,7 @@ describe Switcher do
     end
 
     it "and can not" do
-      person.find_job!(true)
+      person.switch("find_job", true)
 
       person.state.should eq(:manager)
     end
@@ -104,6 +105,54 @@ describe Switcher do
       car_one.buy!
 
       car_two.state.should eq(:new)
+    end
+  end
+
+  describe "Event bubbling" do
+    it "should bubble event" do
+      car = Car.new
+      car.airbag = Airbag.new
+
+      car.buy!
+      car.start!
+      car.crash!
+
+      car.airbag.state.should eq(:deployed)
+    end
+
+    it "should bubble event to collections" do
+      car = Car.new
+      car.airbags = [Airbag.new, Airbag.new]
+
+      car.buy!
+      car.start!
+      car.crash!
+
+      car.airbags.each do |ab|
+        ab.state.should eq(:deployed)
+      end
+    end
+
+    it "should define original target" do
+      car = Car.new
+      car.airbag = Airbag.new
+
+      car.buy!
+      car.start!
+      car.crash!
+
+      car.airbag.crashed_from.to_s.should eq("Car")
+    end
+
+    it "should cancel bubble" do
+      car = Car.new
+      car.airbag = Airbag.new
+
+      car.buy!
+      car.start!
+      car.crash!(false)
+
+      car.airbag.state.should eq(:idle)
     end
   end
 end

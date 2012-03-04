@@ -1,7 +1,11 @@
 class Car
   include Switcher::Object
 
+  attr_accessor :airbag, :airbags
+
   switcher :state do
+    notify :airbag, :airbags
+
     state :new do
       on :buy, switch_to: :buyed
     end
@@ -11,7 +15,9 @@ class Car
     end
 
     state :used do
-      on :crash, switch_to: :damaged
+      on :crash, switch_to: :damaged do |ev, fast=true|
+        ev.cancel_bubble unless fast
+      end
     end
 
     state :damaged do

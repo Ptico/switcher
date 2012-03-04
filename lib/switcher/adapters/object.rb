@@ -39,9 +39,7 @@ module Switcher
             end
 
             define_method(:"#{event_name}!") do |*args|
-              self.class.class_variable_get(:@@__specs__).each do |spc|
-                self.instance_variable_get(:"@#{spc.name}_statement").publish(event_name, args)
-              end
+              switch(event_name, *args)
             end
           end
         end
@@ -54,5 +52,14 @@ module Switcher
       base.extend Switcher::Object::ClassMethods
     end
 
+    def switch(event, *args)
+      switch_from(self.class, event, *args)
+    end
+
+    def switch_from(orig, event, *args)
+      self.class.class_variable_get(:@@__specs__).each do |spc|
+        self.instance_variable_get(:"@#{spc.name}_statement").publish(event, orig, args)
+      end
+    end
   end
 end
