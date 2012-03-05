@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/Ptico/switcher.png)](http://travis-ci.org/Ptico/switcher)
+
 Switcher is lightweight event-driven state machine.
 
 ## Basic usage:
@@ -101,12 +103,11 @@ user.save
 ## More examples:
 
 * [Wiki](https://github.com/Ptico/switcher/wiki)
-* Specs in spec/
+* [Specs](https://github.com/Ptico/switcher/tree/master/spec)
 
 ## TODO:
 
 * 1.8 compat
-* Write README
 * Refactoring
 * Events without state
 * Ability to define validations, associations etc. in state (ability to call static methods from object)

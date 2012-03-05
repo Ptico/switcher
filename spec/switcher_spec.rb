@@ -63,7 +63,7 @@ describe Switcher do
     it "should force state if needed" do
       crashed_car = Car.new
 
-      crashed_car.force_state(:damaged)
+      crashed_car.state_force(:damaged)
       crashed_car.state.should eq(:damaged)
     end
   end

@@ -15,7 +15,7 @@ module Switcher
           define_method(:"#{spec_name}") { self.instance_variable_get(:"@#{spec_name}_statement").state_current }
           define_method(:"#{spec_name}=") { nil } # FIXME - raise exception
 
-          define_method(:"force_#{spec_name}") { |state| self.instance_variable_get(:"@#{spec_name}_statement").force_state(state.to_sym) }
+          define_method(:"#{spec_name}_force") { |state| self.instance_variable_get(:"@#{spec_name}_statement").force_state(state.to_sym) }
 
           events = []
 
