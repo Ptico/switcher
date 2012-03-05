@@ -68,9 +68,7 @@ class Human
     end
 
     state :civil do
-      on :find_job, switch_to: :manager do |ev, cv|
-        ev.restrict unless cv
-      end
+      on :find_job, call: :employment, switch_to: :manager
     end
 
     state :manager do
@@ -88,5 +86,9 @@ class Human
 
   def hard_to?(learn=false)
     !!learn
+  end
+
+  def employment(ev, cv)
+    ev.restrict unless cv
   end
 end

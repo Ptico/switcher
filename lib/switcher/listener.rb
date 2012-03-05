@@ -28,6 +28,9 @@ module Switcher
 
     def trigger(event, facade, instance, args)
       if ev = @events[event]
+        if ev[:options][:call]
+          instance.instance_exec(facade, *args) { |facad, *arguments| self.send(ev[:options][:call], facad, *arguments) }
+        end
         instance.instance_exec(facade, *args, &ev[:callback]) if ev[:callback].respond_to?(:call)
         if !facade.stopped && ev[:options][:allow_switch] && switch_to = ev[:options][:switch_to]
           facade.switch_to(switch_to)

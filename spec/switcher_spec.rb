@@ -59,6 +59,13 @@ describe Switcher do
       person.state_manager?.should be_true
       person.state_civil?.should   be_false
     end
+
+    it "should force state if needed" do
+      crashed_car = Car.new
+
+      crashed_car.force_state(:damaged)
+      crashed_car.state.should eq(:damaged)
+    end
   end
 
   describe "Multiple states" do

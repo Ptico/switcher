@@ -20,6 +20,9 @@ module Switcher
           define_method(:"#{spec_name}_prev") { self.instance_variable_get(:"@#{spec_name}_statement").state_prev }
 
           define_method(:"#{spec_name}") { self.instance_variable_get(:"@#{spec_name}_statement").state_current }
+          define_method(:"#{spec_name}=") { nil }
+
+          define_method(:"force_#{spec_name}") { |state| self.instance_variable_get(:"@#{spec_name}_statement").force_state(state.to_sym) }
 
           events = []
 
@@ -57,9 +60,13 @@ module Switcher
     end
 
     def switch_from(orig, event, *args)
+      return false unless (self.respond_to?(:"can_#{event}?") and self.send(:"can_#{event}?"))
+
       self.class.class_variable_get(:@@__specs__).each do |spc|
         self.instance_variable_get(:"@#{spc.name}_statement").publish(event, orig, args)
       end
+
+      true
     end
   end
 end

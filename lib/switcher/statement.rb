@@ -51,6 +51,12 @@ module Switcher
       end
     end
 
+    def force_state(state)
+      return unless @spec.states_list.include?(state.to_sym) # FIXME - raise exception
+      @state_prev    = state_current
+      @state_current = state.to_sym
+    end
+
   private
 
     def set_state(facade)
