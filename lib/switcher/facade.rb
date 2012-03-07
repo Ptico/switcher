@@ -3,9 +3,10 @@ module Switcher
     def initialize(target, data)
       @args    = data
       @stopped = false
+      @target  = target
+
       @bubble_cancelled = false
       @target_state     = nil
-      @target  = target
     end
 
     attr_reader :args, :stopped, :target, :target_state, :bubble_cancelled

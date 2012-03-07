@@ -7,10 +7,10 @@ module Switcher
       @name        = name.to_sym
       @states      = {}
       @states_list = []
-      @targets     = []
+      @subscribers = []
     end
 
-    attr_reader :name, :states, :states_list, :targets
+    attr_reader :name, :states, :states_list, :subscribers
 
     def state(name, &block)
       listener = Listener.new(name)
@@ -21,7 +21,7 @@ module Switcher
     end
 
     def notify(*list)
-      @targets = list
+      @subscribers = list
     end
 
   end

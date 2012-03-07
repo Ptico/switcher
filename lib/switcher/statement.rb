@@ -1,10 +1,8 @@
 module Switcher
   class Statement
     def initialize(instance, spec, state_current=nil, state_prev=nil)
-      @instance = instance
-
-      @spec = spec
-
+      @spec          = spec
+      @instance      = instance
       @state_prev    = state_prev
       @state_current = state_current
     end
@@ -19,40 +17,41 @@ module Switcher
       @state_prev ? @state_prev.to_sym : nil
     end
 
-    def publish(event, original, args)
+    def publish(event, target, args)
       states = @spec.states
       state  = state_current
 
       return unless states.has_key?(state)
 
-      facade = Facade.new(original, args)
+      listener = states[state]
+      facade   = Facade.new(target, args)
 
       ["before_#{event}", event.to_s].each do |ev|
-        states[state].trigger(ev, facade, @instance, args)
+        listener.trigger(ev, facade, @instance, args)
       end
 
       set_state(facade)
 
-      states[state].trigger("after_#{event}", facade, @instance, args)
+      listener.trigger("after_#{event}", facade, @instance, args)
 
       return if facade.bubble_cancelled
 
-      if @spec.targets.length > 0
-        @spec.targets.each do |target|
-          target_instance = @instance.send(target.to_sym)
-          if target_instance.respond_to?(:each)
-            target_instance.each do |ti|
-              ti.switch_from(original, event, args) if ti.respond_to?(:switch_from)
-            end
+      unless @spec.subscribers.empty?
+        @spec.subscribers.each do |sub|
+          sub_instance = @instance.send(sub.to_sym)
+
+          if sub_instance.respond_to?(:each)
+            sub_instance.each { |ti| sub_switch(ti, target, event, args) }
           else
-            target_instance.switch_from(original, event, args) if target_instance.respond_to?(:switch_from)
+            sub_switch(sub_instance, target, event, args)
           end
-        end
-      end
-    end
+        end # each
+      end # unless
+    end # def publish
 
     def force_state(state)
       return unless @spec.states_list.include?(state.to_sym) # FIXME - raise exception
+
       @state_prev    = state_current
       @state_current = state.to_sym
     end
@@ -66,5 +65,9 @@ module Switcher
       end
     end
 
-  end
+    def sub_switch(sub, target, event, args)
+      sub.switch_from(target, event, args) if sub.respond_to?(:switch_from)
+    end
+
+  end # class Statement
 end
