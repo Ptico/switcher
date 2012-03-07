@@ -12,28 +12,8 @@ module Switcher
     end
 
     module ClassMethods
-      def switcher_pre_initialize(inst, spec)
+      def switcher_pre_initialize(inst, events)
         inst.class_eval do
-          spec_name = spec.name
-
-          define_method(:"#{spec_name}_spec") { spec }
-          define_method(:"#{spec_name}_prev") { self.instance_variable_get(:"@#{spec_name}_statement").state_prev }
-
-          define_method(:"#{spec_name}") { self.instance_variable_get(:"@#{spec_name}_statement").state_current }
-          define_method(:"#{spec_name}=") { nil }
-
-          define_method(:"#{spec_name}_force") { |state| self.instance_variable_get(:"@#{spec_name}_statement").force_state(state.to_sym) }
-
-          events = []
-
-          spec.states.each_pair do |state_name, state|
-            define_method(:"#{spec_name}_#{state_name}?") do
-              state_name == self.send(:"#{spec_name}")
-            end
-
-            events << state.event_names
-          end
-
           events.flatten.each do |event_name|
             define_method(:"can_#{event_name}?") do
               self.class.class_variable_get(:@@__specs__).map { |spc|
