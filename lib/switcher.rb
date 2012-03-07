@@ -34,7 +34,21 @@ module Switcher
         events << state.event_names
       end
 
-      switcher_pre_initialize(self, events)
+      events.flatten.each do |event_name|
+        define_method(:"can_#{event_name}?") do
+          self.class.class_variable_get(:@@__specs__).map { |spc|
+            spc.states[self.send(:"#{spc.name}")].event_names.include?(event_name)
+          }.include?(true)
+        end
+
+        define_method(:"#{event_name}!") do |*args|
+          switch(event_name, *args)
+        end
+      end
     end
+  end
+
+  def switch(event, *args)
+    switch_from(self.class, event, *args)
   end
 end

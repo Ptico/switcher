@@ -1,33 +1,11 @@
 module Switcher
   module ActiveRecord
-
-    module Initializer
-    end
-
-    module ClassMethods
-      def switcher_pre_initialize(inst, events)
-        inst.class_eval do
-          events.flatten.each do |event_name|
-            define_method(:"can_#{event_name}?") do
-              self.class.class_variable_get(:@@__specs__).map { |spc|
-                spc.states[self.send(:"#{spc.name}")].event_names.include?(event_name)
-              }.include?(true)
-            end
-
-            define_method(:"#{event_name}!") do |*args|
-              switch_from(nil, event_name, *args)
-            end
-          end
-
-        end
-      end
-    end
-
     def self.included(base)
       base.extend Switcher::ClassMethods
-      base.extend Switcher::ActiveRecord::ClassMethods
 
       base.class_eval do
+        include Switcher
+
         after_initialize do
           self.class.class_variable_get(:@@__specs__).each do |spec|
             spec_name     = spec.name
@@ -38,10 +16,6 @@ module Switcher
           end
         end
       end
-    end
-
-    def switch(event, *args)
-      switch_from(self.class, event, *args)
     end
 
     def switch_from(orig, event, *args)
@@ -60,6 +34,5 @@ module Switcher
 
       true
     end
-
   end
 end
