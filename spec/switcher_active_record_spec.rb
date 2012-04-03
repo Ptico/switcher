@@ -74,4 +74,13 @@ describe Switcher::ActiveRecord do
     box.state_requested?.should be_true
     box.state_produced?.should  be_false
   end
+
+  it "should force state" do
+    box.state_force(:broken)
+    box.save
+
+    reloaded = Box.find(box.id)
+
+    reloaded.state.should eq(:broken)
+  end
 end

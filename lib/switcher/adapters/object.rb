@@ -29,5 +29,6 @@ module Switcher
 
       true
     end
+
   end
 end

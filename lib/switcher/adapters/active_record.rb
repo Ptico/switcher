@@ -15,6 +15,15 @@ module Switcher
             self.instance_variable_set(:"@#{spec_name}_statement", Statement.new(self, spec, state_current, state_prev))
           end
         end
+
+        before_validation do
+          self.class.class_variable_get(:@@__specs__).each do |spc|
+            spc_name = spc.name
+
+            current_state = self.instance_variable_get(:"@#{spc.name}_statement").state_current
+            write_attribute(spc_name, current_state)
+          end
+        end
       end
     end
 

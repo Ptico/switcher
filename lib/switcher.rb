@@ -46,6 +46,7 @@ module Switcher
         end
       end
     end
+
   end
 
   def switch(event, *args)
