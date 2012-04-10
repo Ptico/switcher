@@ -27,7 +27,7 @@ module Switcher
         self.instance_variable_get(:"@#{spc.name}_statement").publish(event, orig, args)
       end
 
-      true
+      return self
     end
 
   end

@@ -47,6 +47,8 @@ module Switcher
           end
         end # each
       end # unless
+
+      return @instance
     end # def publish
 
     def force_state(state)
@@ -54,6 +56,8 @@ module Switcher
 
       @state_prev    = state_current
       @state_current = state.to_sym
+
+      return @instance
     end
 
   private
